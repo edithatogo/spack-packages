@@ -5,10 +5,21 @@ on:
     - cron: '39 2 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   stale:
+    permissions:
+      issues: write  # for actions/stale to close stale issues
+      pull-requests: write  # for actions/stale to close stale PRs
     runs-on: ubuntu-latest
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
       - uses: actions/stale@b5d41d4e1d5dceea10e7104786b73624c18a190f
         with:
           # Issues configuration
